@@ -1,78 +1,67 @@
 AI/ML Beginners Project
-# Credit Card Fraud Detection 
+# Credit Card Fraud Detection
 
 ## Project Overview
-This project builds a Fake News Detection System trained on a dataset containing real and fake news articles. It uses TF-IDF vectorization and a Logistic Regression or Naive Bayes classifier to analyze the textual patterns of news content. The system is deployed with Streamlit for easy interaction — users can enter a news statement and instantly see if it’s fake or real, along with a confidence score.
+This project builds a machine learning model to detect fraudulent credit card transactions using real-world data. It includes the full pipeline from data preprocessing, feature scaling, and handling class imbalance to model training, evaluation, and deployment using Streamlit. The dataset is highly imbalanced, with only a small fraction of transactions being fraudulent. The project applies resampling (SMOTE) and trains multiple algorithms such as Logistic Regression, Random Forest, and XGBoost to achieve high precision and recall.
 
-## Key Features
-- Text preprocessing with cleaning, stopword removal, and lemmatization
-- TF-IDF vectorization for feature extraction
-- Model trained to achieve around 98–99% accuracy
-- Streamlit web interface for real-time predictions
-- Confidence score displayed for each prediction
-- Automatically loads a trained model (or trains one if not found)
+## Dataset
+Source: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+File: creditcard.csv  
+Details:  
+- Total records: 284,807 transactions  
+- Fraudulent transactions: 492  
+- Features: 30 columns (V1–V28, Amount, Time)  
+- Target: Class (0 = Legitimate, 1 = Fraudulent)
 
-## Why Some True Statements Are Flagged as Fake
-Short or overly simple sentences such as "Donald Trump is a president of America" may be predicted as fake because the model was trained mostly on full-length news articles. It assumes "fake" when:
-- The text resembles clickbait or incomplete statements seen in fake samples
-- The statement lacks journalistic context such as sources or structure
-- The model detects political figure mentions that often correlated with fake news in the dataset
+## Project Workflow
+1. Data Loading and Exploration  
+   Load the dataset using pandas, inspect data distribution, and check for missing values.  
+2. Preprocessing  
+   Drop the Time column, scale the Amount column using StandardScaler, and split the dataset into training and test sets with stratified sampling.  
+3. Handling Imbalance  
+   Use SMOTE (Synthetic Minority Oversampling Technique) to balance the classes in the training set.  
+4. Model Training  
+   Train and compare Logistic Regression, Random Forest, and XGBoost models.  
+5. Evaluation Metrics  
+   Evaluate models using Precision, Recall, F1-score, ROC AUC, and Precision-Recall AUC. The main goal is to reduce false negatives while maintaining high precision.  
+6. Model Saving  
+   Save the trained model and the fitted scaler as xgb_credit_fraud.model and scaler_amount.pkl.  
+7. Deployment with Streamlit  
+   A simple Streamlit app is provided for real-time prediction using manual feature input.
 
-To improve predictions, provide more context. For example:
-"Donald Trump served as the 45th President of the United States, according to official records."
-This provides linguistic structure and facts, which help the model classify more accurately.
+## How to Run the Project
+pip install pandas numpy scikit-learn imbalanced-learn xgboost streamlit joblib matplotlib  
+streamlit run app.py  
 
-## Tech Stack
-- Python 3
-- Pandas, NumPy
-- NLTK (for stopwords and lemmatization)
-- Scikit-learn (for TF-IDF and model training)
-- Streamlit (for deployment)
-- Joblib (for saving/loading models)
+## Streamlit App Features
+- Input V1–V28 and Amount values manually  
+- Predict whether a transaction is fraudulent  
+- View fraud probability and classification result  
 
-## Dataset 
-link : https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
+## Repository Structure
+project/  
+│  
+├── creditcard.csv               (Dataset file)  
+├── notebook.ipynb               (Main Jupyter Notebook)  
+├── app.py                       (Streamlit application)  
+├── xgb_credit_fraud.model       (Trained XGBoost model)  
+├── scaler_amount.pkl            (Scaler for Amount feature)  
+└── README.md                    (Project documentation)
 
-## Folder Structure
-Fake-News-Detection/
-│
-├── fake_news_detection.ipynb   # Model training and evaluation
-├── app.py                      # Streamlit application
-├── vectorizer.pkl              # Saved TF-IDF vectorizer
-├── model.pkl                   # Saved ML model
-├── true.csv                    # True news dataset
-├── fake.csv                    # Fake news dataset
-└── README.md                   # Project documentation
+## Technologies Used
+Python 3.x  
+Pandas, NumPy  
+Scikit-learn  
+Imbalanced-learn (SMOTE)  
+XGBoost  
+Matplotlib  
+Streamlit  
 
-## How to Run
-1. Install dependencies
-   pip install -r requirements.txt
-
-2. Run the Streamlit app
-   streamlit run app.py
-
-3. Interact with the app  
-   Enter any news content and click "Check News" to get:
-   - Real or Fake label
-   - Confidence percentage
-
-## Model Performance
-Accuracy: 98.8%  
-Precision: 0.99  
-Recall: 0.99  
-F1-score: 0.99  
-
-## Example Predictions
-Input: "The U.S. Senate passed a new infrastructure bill on Tuesday."  
-Output: Real News (Confidence: 97%)
-
-Input: "NASA confirms Earth will go dark for 15 days next month."  
-Output: Fake News (Confidence: 99%)
-
-## Future Improvements
-- Add multiple ML models for comparison
-- Include article source verification
-- Integrate live fact-checking API
+## Results
+XGBoost achieved the best performance.  
+Precision-Recall AUC: approximately 0.98  
+ROC AUC: approximately 0.99  
+The model effectively detects fraudulent transactions with very low false negatives.
 
 ## Contributing
 Contributions are welcome!
